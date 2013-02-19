@@ -18,7 +18,8 @@ module OmniAuth
       }
 
       uid {
-        access_token.params['xoauth_yahoo_guid']
+        #access_token.params['xoauth_yahoo_guid']
+        raw_info['id']
       }
 
       info do
@@ -49,7 +50,7 @@ module OmniAuth
 
       def raw_info
         # This is a public API and does not need signing or authentication
-        request = "http://social.yahooapis.com/v1/user/#{uid}/profile?format=json"
+        request = "https://userinfo.yahooapis.jp/yconnect/v1/attribute/#{uid}/profile?format=json"
         @raw_info ||= MultiJson.decode(access_token.get(request).body)
       rescue ::Errno::ETIMEDOUT
         raise ::Timeout::Error

@@ -11,7 +11,7 @@ describe OmniAuth::Strategies::Yconnect do
     end
 
     it 'should have correct authorize url' do
-      expect(subject.options.client_options.authorize_path).to eq('https://auth.login.yahoo.co.jp/yconnect/v1/authorization')
+      expect(subject.options.client_options.authorize_path).to eq('/yconnect/v1/authorization')
     end
   end
 end
