@@ -14,7 +14,7 @@ module OmniAuth
         :authorize_path     => '/yconnect/v1/authorization',
         :request_token_path => '/yconnect/v1/token',
         :user_info_path     => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
-        :site               => 'https://api.login.yahoo.co.jp'
+        :site               => 'https://auth.login.yahoo.co.jp'
       }
 
       uid {
