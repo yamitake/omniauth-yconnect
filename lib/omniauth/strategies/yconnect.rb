@@ -10,11 +10,11 @@ module OmniAuth
       option :name, 'yconnect'
 
       option :client_options, {
-        :access_token_path  => 'https://auth.login.yahoo.co.jp/yconnect/v1/token',
-        :authorize_path     => 'https://auth.login.yahoo.co.jp/yconnect/v1/authorization',
-        :request_token_path => 'https://auth.login.yahoo.co.jp/yconnect/v1/token',
-        :user_info_path => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
-        :site               => 'https://api.login.yahoo.com'
+        :access_token_path  => '/yconnect/v1/token',
+        :authorize_path     => '/yconnect/v1/authorization',
+        :request_token_path => '/yconnect/v1/token',
+        :user_info_path     => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
+        :site               => 'https://api.login.yahoo.co.jp'
       }
 
       uid {
