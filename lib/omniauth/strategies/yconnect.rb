@@ -3,66 +3,63 @@ require 'multi_json'
 
 module OmniAuth
   module Strategies
-    class Yconnect < OmniAuth::Strategies::OAuth
-      option :name, 'twitter'
-      option :client_options, {:authorize_path => '/oauth/authenticate',
-                               :site => 'https://api.twitter.com',
-                               :proxy => ENV['http_proxy'] ? URI(ENV['http_proxy']) : nil}
 
-      uid { access_token.params[:user_id] }
+    # An omniauth 1.0 strategy for yahoo authentication
+    class Yconnect < OmniAuth::Strategies::OAuth
+
+      option :name, 'yconnect'
+
+      option :client_options, {
+        :access_token_path  => 'https://auth.login.yahoo.co.jp/yconnect/v1/token',
+        :authorize_path     => 'https://auth.login.yahoo.co.jp/yconnect/v1/authorization',
+        :request_token_path => 'https://auth.login.yahoo.co.jp/yconnect/v1/token',
+        :user_info_path => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
+        :site               => 'https://api.login.yahoo.com'
+      }
+
+      uid {
+        access_token.params['xoauth_yahoo_guid']
+      }
 
       info do
+        primary_email = nil
+        if user_info['emails']
+          email_info    = user_info['emails'].find{|e| e['primary']} || user_info['emails'].first
+          primary_email = email_info['handle']
+        end
         {
-          :nickname => raw_info['screen_name'],
-          :name => raw_info['name'],
-          :location => raw_info['location'],
-          :image => options[:secure_image_url] ? raw_info['profile_image_url_https'] : raw_info['profile_image_url'],
-          :description => raw_info['description'],
-          :urls => {
-            'Website' => raw_info['url'],
-            'YConnect' => 'http://twitter.com/' + raw_info['screen_name'],
+          :nickname    => user_info['nickname'],
+          :name        => user_info['givenName'] || user_info['nickname'],
+          :image       => user_info['image']['imageUrl'],
+          :description => user_info['message'],
+          :email       => primary_email,
+          :urls        => {
+            'Profile' => user_info['profileUrl'],
           }
         }
       end
 
       extra do
-        { :raw_info => raw_info }
+        hash = {}
+        hash[:raw_info] = raw_info unless skip_info?
+        hash
       end
 
+      # Return info gathered from the v1/user/:id/profile API call
+
       def raw_info
-        @raw_info ||= MultiJson.load(access_token.get('/1.1/account/verify_credentials.json').body)
+        # This is a public API and does not need signing or authentication
+        request = "http://social.yahooapis.com/v1/user/#{uid}/profile?format=json"
+        @raw_info ||= MultiJson.decode(access_token.get(request).body)
       rescue ::Errno::ETIMEDOUT
         raise ::Timeout::Error
       end
 
-      alias :old_request_phase :request_phase
+      # Provide the "Profile" portion of the raw_info
 
-      def request_phase
-        force_login = session['omniauth.params'] ? session['omniauth.params']['force_login'] : nil
-        screen_name = session['omniauth.params'] ? session['omniauth.params']['screen_name'] : nil
-        x_auth_access_type = session['omniauth.params'] ? session['omniauth.params']['x_auth_access_type'] : nil
-        if force_login && !force_login.empty?
-          options[:authorize_params] ||= {}
-          options[:authorize_params].merge!(:force_login => 'true')
-        end
-        if screen_name && !screen_name.empty?
-          options[:authorize_params] ||= {}
-          options[:authorize_params].merge!(:force_login => 'true', :screen_name => screen_name)
-        end
-        if x_auth_access_type
-          options[:request_params] || {}
-          options[:request_params].merge!(:x_auth_access_type => x_auth_access_type)
-        end
-
-        if session['omniauth.params'] && session['omniauth.params']["use_authorize"] == "true"
-          options.client_options.authorize_path = '/oauth/authorize'
-        else
-          options.client_options.authorize_path = '/oauth/authenticate'
-        end
-
-        old_request_phase
+      def user_info
+        @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
       end
-
     end
   end
 end

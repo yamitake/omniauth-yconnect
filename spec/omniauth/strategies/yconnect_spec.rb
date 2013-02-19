@@ -2,20 +2,16 @@ require 'spec_helper'
 
 describe OmniAuth::Strategies::Yconnect do
   subject do
-    OmniAuth::Strategies::Twitter.new({})
+    OmniAuth::Strategies::Yconnect.new({})
   end
 
   context 'client options' do
     it 'should have correct name' do
-      expect(subject.options.name).to eq('twitter')
-    end
-
-    it 'should have correct site' do
-      expect(subject.options.client_options.site).to eq('https://api.twitter.com')
+      expect(subject.options.name).to eq('yconnect')
     end
 
     it 'should have correct authorize url' do
-      expect(subject.options.client_options.authorize_path).to eq('/oauth/authenticate')
+      expect(subject.options.client_options.authorize_path).to eq('https://auth.login.yahoo.co.jp/yconnect/v1/authorization')
     end
   end
 end
