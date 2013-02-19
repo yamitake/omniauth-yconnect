@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'multi_json', '~> 1.3'
-  gem.add_runtime_dependency 'omniauth-oauth', '~> 1.0'
+  gem.add_runtime_dependency 'omniauth-oauth2'
   gem.add_development_dependency 'rspec', '~> 2.7'
   gem.add_development_dependency 'rack-test'
   gem.add_development_dependency 'simplecov'

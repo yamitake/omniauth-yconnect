@@ -1,11 +1,11 @@
-require 'omniauth-oauth'
+require 'omniauth-oauth2'
 require 'multi_json'
 
 module OmniAuth
   module Strategies
 
     # An omniauth 1.0 strategy for yahoo authentication
-    class Yconnect < OmniAuth::Strategies::OAuth
+    class Yconnect < OmniAuth::Strategies::OAuth2
 
       option :name, 'yconnect'
 
