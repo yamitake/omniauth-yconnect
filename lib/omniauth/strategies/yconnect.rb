@@ -11,9 +11,13 @@ module OmniAuth
 
       option :client_options, {
         :access_token_path  => '/yconnect/v1/token',
+        :authorize_url      => '/yconnect/v1/token',
+        :authorize_path     => '/yconnect/v1/authorization',
         :authorize_path     => '/yconnect/v1/authorization',
         :request_token_path => '/yconnect/v1/token',
+        :token_url          => '/yconnect/v1/token',
         :user_info_path     => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
+        :user_info_url      => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
         :site               => 'https://auth.login.yahoo.co.jp'
       }
 
