@@ -1,6 +1,5 @@
 require 'omniauth-oauth2'
 require 'multi_json'
-require 'base64'
 
 module OmniAuth
   module Strategies
@@ -48,6 +47,7 @@ module OmniAuth
       end
 
       def client
+        pry
         options.auth_token_params = {} if options.auth_token_params.nil?
         options.auth_token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
         options.token_params = {} if options.token_params.nil?
@@ -56,7 +56,6 @@ module OmniAuth
       end
 
       def build_access_token
-        pry
         super
       end
 
