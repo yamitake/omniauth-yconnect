@@ -1,5 +1,5 @@
 module Omniauth
   module Yconnect
-    VERSION = "0.0.3.9.3"
+    VERSION = "0.0.3.9.4"
   end
 end

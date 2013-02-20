@@ -55,6 +55,11 @@ module OmniAuth
         super
       end
 
+      def build_access_token
+        pry
+        super
+      end
+
 
 
       # Return info gathered from the v1/user/:id/profile API call
