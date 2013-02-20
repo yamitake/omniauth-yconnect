@@ -47,6 +47,12 @@ module OmniAuth
         hash
       end
 
+      def client
+        options.auth_token_params = {} if options.auth_token_params.nil?
+        options.auth_token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
+        super
+      end
+
       # Return info gathered from the v1/user/:id/profile API call
 
       def raw_info
@@ -61,11 +67,6 @@ module OmniAuth
 
       def user_info
         @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
-      end
-
-      def token_params
-        options.token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-        options.token_params.merge(options.token_options.inject({}){|h,k| h[k.to_sym] = options[k] if options[k]; h})
       end
     end
   end
