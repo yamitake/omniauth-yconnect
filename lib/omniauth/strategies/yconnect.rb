@@ -18,8 +18,6 @@ module OmniAuth
         :site               => 'https://auth.login.yahoo.co.jp'
       }
 
-      options.token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-
       uid {
         #access_token.params['xoauth_yahoo_guid']
         raw_info['id']
@@ -63,6 +61,11 @@ module OmniAuth
 
       def user_info
         @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
+      end
+
+      def token_params
+        options.token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
+        options.token_params.merge(options.token_options.inject({}){|h,k| h[k.to_sym] = options[k] if options[k]; h})
       end
     end
   end
