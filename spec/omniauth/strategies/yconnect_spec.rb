@@ -11,10 +11,11 @@ describe OmniAuth::Strategies::Yconnect do
     end
 
     it 'should have correct authorize url' do
-      expect(subject.options.client_options.authorize_path).to eq('/yconnect/v1/authorization')
+      expect(subject.options.client_options.authorize_url).to eq('/yconnect/v1/authorization')
     end
 
     it 'should be true authrorize_url' do
+      p subject.request
       # p subject
       # p "aaaaaaaaaaaaaaaaaaaaaaaafsdfsd"
       # p subject.client

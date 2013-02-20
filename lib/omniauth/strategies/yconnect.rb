@@ -1,5 +1,6 @@
 require 'omniauth-oauth2'
 require 'multi_json'
+require 'base64'
 
 module OmniAuth
   module Strategies
@@ -10,13 +11,9 @@ module OmniAuth
       option :name, 'yconnect'
 
       option :client_options, {
-        :access_token_path  => '/yconnect/v1/token',
         :access_token_url   => '/yconnect/v1/token',
-        :authorize_path     => '/yconnect/v1/authorization',
         :authorize_url      => '/yconnect/v1/authorization',
-        :request_token_path => '/yconnect/v1/token',
         :token_url          => '/yconnect/v1/token',
-        :user_info_path     => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
         :user_info_url      => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
         :site               => 'https://auth.login.yahoo.co.jp'
       }
@@ -64,6 +61,14 @@ module OmniAuth
 
       def user_info
         @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
+      end
+
+      #
+      # http://developer.yahoo.co.jp/yconnect/server_app/explicit/token.html
+      #
+      def request
+        super.request['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::encode64("#{options.client_id}:#{client_secret}")
+        super.request
       end
     end
   end
