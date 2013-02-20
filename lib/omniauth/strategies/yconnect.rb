@@ -67,7 +67,7 @@ module OmniAuth
       # http://developer.yahoo.co.jp/yconnect/server_app/explicit/token.html
       #
       def request
-        super.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::encode64("#{options.client_id}:#{client_secret}")
+        super.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
         super
       end
     end
