@@ -18,6 +18,8 @@ module OmniAuth
         :site               => 'https://auth.login.yahoo.co.jp'
       }
 
+      options.token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
+
       uid {
         #access_token.params['xoauth_yahoo_guid']
         raw_info['id']
@@ -61,14 +63,6 @@ module OmniAuth
 
       def user_info
         @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
-      end
-
-      #
-      # http://developer.yahoo.co.jp/yconnect/server_app/explicit/token.html
-      #
-      def request
-        super.env['HTTP_AUTHORIZATION'] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-        super
       end
     end
   end
