@@ -46,16 +46,13 @@ module OmniAuth
         hash
       end
 
-      def client
+      def build_access_token
         pry
         options.auth_token_params = {} if options.auth_token_params.nil?
         options.auth_token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
         options.token_params = {} if options.token_params.nil?
         options.token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-        super
-      end
-
-      def build_access_token
+        pry
         super
       end
 
