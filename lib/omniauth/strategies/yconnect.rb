@@ -49,9 +49,11 @@ module OmniAuth
 
       def client
         options.auth_token_params = {} if options.auth_token_params.nil?
-        options.auth_token_params[:Authorization] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
+        options.auth_token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
         super
       end
+
+
 
       # Return info gathered from the v1/user/:id/profile API call
 
