@@ -51,15 +51,12 @@ module OmniAuth
         options.token_params = {} if options.token_params.nil?
         verifier = request.params['code']
         params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
-        params[:headers] = {'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip ,
+        params[:headers] = {'HTTP_AUTHORIZATION' => 'Basic ' + Base64::strict_encode64("#{options.client_id}:#{options.client_secret}").strip ,
                             'Content-Type'       => 'application/x-www-form-urlencoded;charset=UTF-8'}
         params.delete "client_id"
         params.delete "client_secret"
 
-        @opts = deep_symbolize(options.auth_token_params);
-        pry
-
-        client.auth_code.get_token(verifier, params , @opts)
+        client.auth_code.get_token(verifier, params , deep_symbolize(options.auth_token_params))
       end
 
       # Return info gathered from the v1/user/:id/profile API call
