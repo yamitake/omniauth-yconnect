@@ -51,7 +51,7 @@ module OmniAuth
         options.token_params = {} if options.token_params.nil?
         verifier = request.params['code']
         params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
-        params[:headers] = {'HTTP_AUTHORIZATION' => 'Basic ' + Base64::strict_encode64("#{options.client_id}:#{options.client_secret}").strip ,
+        params[:headers] = {'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip ,
                             'Content-Type'       => 'application/x-www-form-urlencoded;charset=UTF-8'}
         params.delete "client_id"
         params.delete "client_secret"
