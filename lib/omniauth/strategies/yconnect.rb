@@ -56,9 +56,10 @@ module OmniAuth
         params.delete "client_id"
         params.delete "client_secret"
 
+        @opts = deep_symbolize(options.auth_token_params);
         pry
 
-        client.auth_code.get_token(verifier, params , deep_symbolize(options.auth_token_params))
+        client.auth_code.get_token(verifier, params , @opts)
       end
 
       # Return info gathered from the v1/user/:id/profile API call
