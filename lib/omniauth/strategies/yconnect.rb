@@ -14,7 +14,7 @@ module OmniAuth
         :authorize_url      => '/yconnect/v1/authorization',
         :token_url          => '/yconnect/v1/token',
         :user_info_url      => 'https://userinfo.yahooapis.jp/yconnect/v1/attribute',
-        :site               => 'https://auth.login.yahoo.co.jp'
+        :site               => 'https://auth.login.yahoo.co.jp' ,
       }
 
       uid {
@@ -47,13 +47,12 @@ module OmniAuth
       end
 
       def build_access_token
+        #options[:token_method] = :post
+        params = {:code => request.params['code']}
+        params[:headers] = {"HTTP_AUTHORIZATION" => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")}
         pry
-        options.auth_token_params = {} if options.auth_token_params.nil?
-        options.auth_token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-        options.token_params = {} if options.token_params.nil?
-        options.token_params["HTTP_AUTHORIZATION"] = 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")
-        pry
-        super
+        #client.auth_code.get_token(verifier, {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true)), deep_symbolize(options.auth_token_params))
+        client.auth_code.get_token(params, {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true)), deep_symbolize(options.auth_token_params))
       end
 
 
