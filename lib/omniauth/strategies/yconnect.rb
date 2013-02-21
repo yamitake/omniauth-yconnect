@@ -55,6 +55,9 @@ module OmniAuth
                             'Content-Type'       => 'application/x-www-form-urlencoded;charset=UTF-8'}
         params.delete "client_id"
         params.delete "client_secret"
+
+        pry
+
         client.auth_code.get_token(verifier, params , deep_symbolize(options.auth_token_params))
       end
 
