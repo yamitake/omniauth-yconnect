@@ -51,6 +51,7 @@ module OmniAuth
         options.token_params = {} if options.token_params.nil?
         params = {:code => request.params['code']}
         params[:headers] = {"HTTP_AUTHORIZATION" => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")}
+        params[:headers] = {"Authorization" => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}")}
         pry
         client.auth_code.get_token(params, {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true)), deep_symbolize(options.auth_token_params))
       end
