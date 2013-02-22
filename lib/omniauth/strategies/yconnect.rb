@@ -47,8 +47,7 @@ module OmniAuth
       end
 
       def build_access_token
-        verifier = request.params['code']
-        params = {'grant_type' => 'authorization_code', 'code' => code}
+        params = {'grant_type' => 'authorization_code', 'code' => request.params['code']}
         params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
         params[:headers] = {'Expect'=> '' ,
                             'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
