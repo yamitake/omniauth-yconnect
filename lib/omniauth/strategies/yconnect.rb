@@ -47,16 +47,39 @@ module OmniAuth
       end
 
       def build_access_token
-        options.auth_token_params = {} if options.auth_token_params.nil?
-        options.token_params = {} if options.token_params.nil?
         verifier = request.params['code']
+        params = {'grant_type' => 'authorization_code', 'code' => code}
         params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
-        params[:headers] = {'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip ,
-                            'Content-Type'       => 'application/x-www-form-urlencoded;charset=UTF-8'}
+        params[:headers] = {'Expect'=> '' ,
+                            'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
         params.delete "client_id"
         params.delete "client_secret"
+        params.merge(client.token_params.to_hash(:symbolize_keys => true))
+        get_token( params , deep_symbolize(options.auth_token_params))
+      end
 
-        client.auth_code.get_token(verifier, params , deep_symbolize(options.auth_token_params))
+      def get_token(params, access_token_opts={})
+        opts = {:raise_errors => options[:raise_errors], :parse => params.delete(:parse)}
+        response = client.request(:post , client.token_url, opts)
+
+        raise Error.new(response) if client.options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['access_token'])
+        ::OAuth2::AccessToken.from_hash(client.auth_code , response.parsed.merge(access_token_opts))
+      end
+
+      # Refreshes the current Access Token
+      #
+      # @return [AccessToken] a new AccessToken
+      # @note options should be carried over to the new AccessToken
+      def refresh!(params={})
+        raise "A refresh_token is not available" unless refresh_token
+        params.merge!(
+                      :grant_type     => 'refresh_token',
+                      :refresh_token  => refresh_token)
+        params[:headers] = {'Expect'=> '' ,
+                            'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
+        new_token = get_token(params)
+        new_token.options = client.options
+        new_token
       end
 
       # Return info gathered from the v1/user/:id/profile API call
