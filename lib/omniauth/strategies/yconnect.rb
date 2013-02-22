@@ -47,6 +47,7 @@ module OmniAuth
       end
 
       def build_access_token
+        options.token_params = {} if options.token_params.nil?
         params = {'grant_type' => 'authorization_code', 'code' => request.params['code']}
         params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
         params[:headers] = {'Expect'=> '' ,
