@@ -53,7 +53,7 @@ module OmniAuth
                             'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
         params.delete "client_id"
         params.delete "client_secret"
-        params.merge(client.token_params.to_hash(:symbolize_keys => true))
+        params.merge(token_params.to_hash(:symbolize_keys => true))
         get_token( params , deep_symbolize(options.auth_token_params))
       end
 
