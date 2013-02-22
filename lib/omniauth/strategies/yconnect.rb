@@ -20,6 +20,7 @@ module OmniAuth
       uid {
         #access_token.params['xoauth_yahoo_guid']
         raw_info['id']
+
       }
 
       info do
@@ -48,10 +49,12 @@ module OmniAuth
 
       def build_access_token
         options.token_params = {} if options.token_params.nil?
-        params = {'grant_type' => 'authorization_code', 'code' => request.params['code']}
-        params = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
+        options.auth_token_params = {} if options.auth_token_params.nil?
+        params = {}
+        params[:body] = {:redirect_uri => callback_url}.merge(token_params.to_hash(:symbolize_keys => true))
+        params[:body].merge!({'grant_type' => 'authorization_code', 'code' => request.params['code']})
         params[:headers] = {'Expect'=> '' ,
-                            'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
+                            'Authorization' => 'Basic ' + Base64::strict_encode64("#{options.client_id}:#{options.client_secret}").strip}
         params.delete "client_id"
         params.delete "client_secret"
         params.merge(token_params.to_hash(:symbolize_keys => true))
@@ -60,8 +63,7 @@ module OmniAuth
 
       def get_token(params, access_token_opts={})
         opts = {:raise_errors => options[:raise_errors], :parse => params.delete(:parse)}
-        response = client.request(:post , client.token_url, opts)
-
+        response = client.request(:post , client.token_url, params.merge(opts))
         raise Error.new(response) if client.options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['access_token'])
         ::OAuth2::AccessToken.from_hash(client.auth_code , response.parsed.merge(access_token_opts))
       end
@@ -76,7 +78,7 @@ module OmniAuth
                       :grant_type     => 'refresh_token',
                       :refresh_token  => refresh_token)
         params[:headers] = {'Expect'=> '' ,
-                            'HTTP_AUTHORIZATION' => 'Basic ' + Base64::encode64("#{options.client_id}:#{options.client_secret}").strip}
+                            'Authorization' => 'Basic ' + Base64::strict_encode64("#{options.client_id}:#{options.client_secret}").strip}
         new_token = get_token(params)
         new_token.options = client.options
         new_token
