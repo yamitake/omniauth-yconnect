@@ -88,7 +88,7 @@ module OmniAuth
 
       def raw_info
         # This is a public API and does not need signing or authentication
-        url = "https://userinfo.yahooapis.jp/yconnect/v1/attribute/?schema=openid"
+        url = "https://userinfo.yahooapis.jp/yconnect/v1/attribute"
         opts = {:headers => {'Authorization' => access_token.params["token_type"].camelize + ' ' + access_token.token}}
         opts[:params] = {:schema => 'openid'}
         @raw_info ||= MultiJson.decode(client.request(:get , url , opts).body)
