@@ -24,6 +24,7 @@ module OmniAuth
       }
 
       info do
+        pry
         primary_email = nil
         if user_info['emails']
           email_info    = user_info['emails'].find{|e| e['primary']} || user_info['emails'].first
