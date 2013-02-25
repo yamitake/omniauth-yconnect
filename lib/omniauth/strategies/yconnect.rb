@@ -87,12 +87,10 @@ module OmniAuth
       # Return info gathered from the v1/user/:id/profile API call
 
       def raw_info
-        pry
         # This is a public API and does not need signing or authentication
-        request = "https://userinfo.yahooapis.jp/yconnect/v1/attribute/"
-        @request = request
-        pry
-        @raw_info ||= MultiJson.decode(access_token.get(request).body)
+        url = "https://userinfo.yahooapis.jp/yconnect/v1/attribute/?schema=openid"
+        opts = {:headers => {'Authorization' => access_token.token}
+        @raw_info ||= MultiJson.decode(client.request(:get , url , opts).body)
       rescue ::Errno::ETIMEDOUT
         raise ::Timeout::Error
       end
