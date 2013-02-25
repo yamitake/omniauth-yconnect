@@ -65,7 +65,7 @@ module OmniAuth
         opts = {:raise_errors => options[:raise_errors], :parse => params.delete(:parse)}
         response = client.request(:post , client.token_url, params.merge(opts))
         raise Error.new(response) if client.options[:raise_errors] && !(response.parsed.is_a?(Hash) && response.parsed['access_token'])
-        ::OAuth2::AccessToken.from_hash(client.auth_code , response.parsed.merge(access_token_opts))
+        ::OAuth2::AccessToken.from_hash(client , response.parsed.merge(access_token_opts))
       end
 
       # Refreshes the current Access Token
