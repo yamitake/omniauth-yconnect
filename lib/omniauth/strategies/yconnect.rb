@@ -90,7 +90,7 @@ module OmniAuth
         # This is a public API and does not need signing or authentication
         url = "https://userinfo.yahooapis.jp/yconnect/v1/attribute/?schema=openid"
         opts = {:headers => {'Authorization' => access_token.token_type.camelize + ' ' + access_token.token}}
-        @raw_info ||= MultiJson.decode(client.request(:get , url , opts).body))
+        @raw_info ||= MultiJson.decode(client.request(:get , url , opts).body)
       rescue ::Errno::ETIMEDOUT
         raise ::Timeout::Error
       end
