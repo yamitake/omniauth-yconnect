@@ -19,26 +19,31 @@ module OmniAuth
 
       uid {
         #access_token.params['xoauth_yahoo_guid']
-        raw_info['id']
+        raw_info['user_id']
 
       }
 
       info do
-        pry
-        primary_email = nil
-        if user_info['emails']
-          email_info    = user_info['emails'].find{|e| e['primary']} || user_info['emails'].first
-          primary_email = email_info['handle']
-        end
         {
-          :nickname    => user_info['nickname'],
-          :name        => user_info['givenName'] || user_info['nickname'],
-          :image       => user_info['image']['imageUrl'],
-          :description => user_info['message'],
-          :email       => primary_email,
-          :urls        => {
-            'Profile' => user_info['profileUrl'],
-          }
+          :user_id                => user_info["user_id"] ,
+          :name                   => user_info['name'] ,
+          :given_name             => user_info['given_name'] ,
+          :given_name_ja_kana_jP  => user_info['given_name#ja-Kana-JP'] ,
+          :given_name_ja_hani_jP  => user_info['given_name#ja-Hani-JP'] ,
+          :family_name            => user_info['family_name'] ,
+          :family_name_ja_kana_jP => user_info['family_name#ja-Kana-JP'] ,
+          :family_name_ja_hani_jP => user_info['family_name#ja-Hani-JP'] ,
+          :locale                 => user_info['locale'] ,
+          :email                  => user_info['email'] ,
+          :email_verified         => user_info['email_verified'] ,
+          :address                =>  {
+                                    "country"     => user_info["address"] ? user_info["address"]["country"] : nil
+                                    "postal_code" => user_info["address"] ? user_info["address"]["postal_code"] : nil
+                                    "region"      => user_info["address"] ? user_info["address"]["region"] : nil ,
+                                    "locality"    => user_info["address"] ? user_info["address"]["locality"] : nil
+                                    } ,
+          :birthday => user_info['birthday'] ,
+          :gender   => user_info['gender']
         }
       end
 
@@ -100,7 +105,7 @@ module OmniAuth
       # Provide the "Profile" portion of the raw_info
 
       def user_info
-        @user_info ||= raw_info.nil? ? {} : raw_info["profile"]
+        @user_info ||= raw_info.nil? ? {} : raw_info
       end
     end
   end
