@@ -37,13 +37,13 @@ module OmniAuth
           :email                  => user_info['email'] ,
           :email_verified         => user_info['email_verified'] ,
           :address                =>  {
-                                    "country"     => user_info["address"] ? user_info["address"]["country"] : nil
-                                    "postal_code" => user_info["address"] ? user_info["address"]["postal_code"] : nil
+                                    "country"     => user_info["address"] ? user_info["address"]["country"] : nil ,
+                                    "postal_code" => user_info["address"] ? user_info["address"]["postal_code"] : nil ,
                                     "region"      => user_info["address"] ? user_info["address"]["region"] : nil ,
                                     "locality"    => user_info["address"] ? user_info["address"]["locality"] : nil
                                     } ,
-          :birthday => user_info['birthday'] ,
-          :gender   => user_info['gender']
+          :birthday               => user_info['birthday'] ,
+          :gender                 => user_info['gender']
         }
       end
 
