@@ -1,7 +1,9 @@
 # Omniauth::Yconnect
 YConnect OAuth2 Strategy for OmniAuth 1.0.
 
-Supports the OAuth 2.0 server-side and client-side flows. Read the Facebook docs for more details:[Yahoo!デベロッパーネットワークトップ>YConnect](http://developer.yahoo.co.jp/yconnect/)
+Supports the OAuth 2.0 server-side and client-side flows. Read the YConnect docs for more details:
+
+[Yahoo!デベロッパーネットワークトップ>YConnect](http://developer.yahoo.co.jp/yconnect/)
 
 TODO: refactoring
 
