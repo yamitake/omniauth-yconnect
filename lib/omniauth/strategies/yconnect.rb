@@ -93,6 +93,7 @@ module OmniAuth
       # Return info gathered from the v1/user/:id/profile API call
 
       def raw_info
+        return @raw_info if @raw_info
         # This is a public API and does not need signing or authentication
         url = "https://userinfo.yahooapis.jp/yconnect/v1/attribute"
         opts = {:headers => {'Authorization' => access_token.params["token_type"].camelize + ' ' + access_token.token}}
